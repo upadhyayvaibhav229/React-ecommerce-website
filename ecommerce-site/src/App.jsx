@@ -1,12 +1,13 @@
-import Home from "./Components/Home";
+import { Outlet } from "react-router-dom";
+import Home from "./Components/Hero";
 import Header from "./Header";
 
 export default function App() {
   return (
    <>
     <Header/>
-    <Home/>
-    <h1>Hello</h1>
+    <Outlet/>
+   
    </>
   )
 }

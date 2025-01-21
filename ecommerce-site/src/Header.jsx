@@ -1,39 +1,94 @@
 import React from "react";
-import search from './assets/frontend_assets/src_icon.png'
-import logo from './assets/frontend_assets/logo.png'
-import cart from './assets/frontend_assets/cart_icon.png'
+import search from "./assets/frontend_assets/src_icon.png";
+import logo from "./assets/frontend_assets/logo.png";
+import cart from "./assets/frontend_assets/cart_icon.png";
+import { Link, NavLink } from "react-router-dom";
+
 const Header = () => {
   return (
-    <header className="sticky top-0 z-50">
+    <header>
       <nav className="text-black shadow-md flex justify-between items-center p-4">
         {/* Logo */}
         <div>
-          <img
-            src={logo}
-            className="mr-3 h-12"
-            alt="Logo"
-          />
+          <Link to={"/"}>
+            <img src={logo} className="mr-3 h-12 cursor-pointer" alt="Logo" />
+          </Link>
         </div>
 
         {/* Navigation */}
         <div>
           <ul className="flex space-x-4 text-xl font-serif">
-            <li>Home</li>
-            <li>Collection</li>
-            <li>About</li>
-            <li>Contact</li>
-            <li className="bg-transparent text-sm border rounded-full p-1 font-light">Admin Pannel</li>
+            <li>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `block py-2 pr-4 pl-3 duration-200 ${
+                    isActive ? "text-orange-700" : "text-gray-700"
+                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                }
+              >
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/collection"
+                className={({ isActive }) =>
+                  `block py-2 pr-4 pl-3 duration-200 ${
+                    isActive ? "text-orange-700" : "text-gray-700"
+                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                }
+              >
+                Collection
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `block py-2 pr-4 pl-3 duration-200 ${
+                    isActive ? "text-orange-700" : "text-gray-700"
+                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                }
+              >
+                Contact
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `block py-2 pr-4 pl-3 duration-200 ${
+                    isActive ? "text-orange-700" : "text-gray-700"
+                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                }
+              >
+                About
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `bg-transparent text-sm border rounded-full p-1 font-light cursor-pointer duration-200 ${
+                    isActive ? "text-orange-700" : "text-gray-700"
+                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                }
+              >
+                Admin Panel
+              </NavLink>
+            </li>
           </ul>
         </div>
 
-        {/*icons  */}
+        {/* Icons */}
         <div className="flex space-x-5">
-            {/* give search icon */}
-            <img src={search} alt="" className="h-5 cursor-pointer" />
-            <img src={cart} alt="" className="h-5 cursor-pointer" />
-            <img src={cart} alt="" className="h-5 cursor-pointer" />
+          {/* Search Icon */}
+          <img src={search} alt="Search Icon" className="h-5 cursor-pointer" />
+          {/* Cart Icon */}
+          <img src={cart} alt="Cart Icon" className="h-5 cursor-pointer" />
+          {/* Admin  */}
         </div>
-
       </nav>
     </header>
   );
