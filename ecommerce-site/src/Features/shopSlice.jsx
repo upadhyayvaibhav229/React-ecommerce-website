@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { products } from "../assets/frontend_assets/products";
 
+
 const initialState = {
   products: products, // Importing the products array
   currency: "₹",

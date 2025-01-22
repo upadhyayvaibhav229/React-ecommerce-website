@@ -1,6 +1,7 @@
 import React from "react";
 import hero from "../assets/frontend_assets/hero_img.png";
 import { img } from "./img";
+import Latest_Collection from "./Latest_Collection";
 // import { assets } from "../frontend_assets/assets";
 // import assets from "../assets/frontend_assets/assets";
 
@@ -26,12 +27,9 @@ const Hero = () => (
   </section>
 
   {/* section 2 */}
-  <section className="h-full w-full flex items-center justify-center mt-10">
-  <div>
+  
 
-    <h1 className="font-serif text-4xl">Latest Collections</h1>
-  </div>
-  </section>
+  <Latest_Collection/>
   </>
 
   
