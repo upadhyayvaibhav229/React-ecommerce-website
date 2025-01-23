@@ -2,6 +2,7 @@ import React from "react";
 import hero from "../assets/frontend_assets/hero_img.png";
 import { img } from "./img";
 import Latest_Collection from "./Latest_Collection";
+import BestSeller from "./BestSeller";
 // import { assets } from "../frontend_assets/assets";
 // import assets from "../assets/frontend_assets/assets";
 
@@ -30,6 +31,8 @@ const Hero = () => (
   
 
   <Latest_Collection/>
+  {/* <BestSeller/> */}
+  
   </>
 
   

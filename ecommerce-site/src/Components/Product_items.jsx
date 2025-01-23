@@ -3,22 +3,22 @@ import { useSelector } from 'react-redux'
 import { selectShop } from '../Features/shopSlice'
 import {Link} from 'react-router-dom'
 
-const Products = ({id, img, name, price}) => {
+const Product_item = ({id, img, name, price}) => {
 
     const {currency} = useSelector(selectShop)
     console.log(currency);
     
-    
   return (
     <>
-    <Link to={`/product/${id}`}  className='cusor-pointer text-gray-700'/>
+    <Link to={`/product/${id}`}  className='cusor-pointer text-gray-700'>
     <div className='overflow-hidden'>
-      <img className='hover:scale-100 transition ease-in-out' src={img[0]} alt="" />
+      <img className="hover:scale-110 transition ease-in-out" src={img[0]} alt="" />
     </div>
     <p className='pt-3'>{name}</p>
-    <p className='pt-3'>{currency}</p>
+    <p className='pt-3 font-bold'>Price {currency}{price}</p>
+    </Link>
     </>
   )
 }
 
-export default Products
+export default Product_item

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Title from './Title';
-import Products from './Products';
+// import Products from '../Pages/Products';
+// Products
 import { selectShop } from '../Features/shopSlice';
+import Product_item from './Product_items';
+// import Products from '../Pages/Products';
 
 const Latest_Collection = () => {
   const {products, currency, deliveryFee} = useSelector((selectShop))
@@ -21,7 +24,12 @@ const Latest_Collection = () => {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero nihil dicta at delectus delectus 
         </p>
       </div>
-      <Products/>
+      <div className='grid grid-cols-5 gap-4 p-5'>
+      {latestProduct.map((item, i)=> (
+        <Product_item key={i} id={item._id} img={item.image} name={item.name} price={item.price}/>
+      ))}
+
+      </div>
     </div>
   )
 }
