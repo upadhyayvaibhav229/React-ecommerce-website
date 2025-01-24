@@ -16,7 +16,7 @@ const Header = () => {
         </div>
 
         {/* Navigation */}
-        <div>
+        <div className="hidden md:flex">
           <ul className="flex space-x-4 text-xl font-serif">
             <li>
               <NavLink
@@ -66,7 +66,6 @@ const Header = () => {
                 Contact
               </NavLink>
             </li>
-           
             <li>
               <NavLink
                 to="/admin"
@@ -88,7 +87,13 @@ const Header = () => {
           <img src={search} alt="Search Icon" className="h-5 cursor-pointer" />
           {/* Cart Icon */}
           <img src={cart} alt="Cart Icon" className="h-5 cursor-pointer" />
-          {/* Admin  */}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button className="text-gray-700 hover:text-orange-700">
+            <i className="fas fa-bars text-xl"></i> {/* Hamburger icon */}
+          </button>
         </div>
       </nav>
     </header>
