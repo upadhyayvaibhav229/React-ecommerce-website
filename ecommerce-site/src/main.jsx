@@ -14,8 +14,8 @@ import Products from './Pages/Products.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      {/* Use index to explicitly define the default route */}
-      <Route index element={<Home />} /> {/* This makes Home the default route */}
+
+      <Route index element={<Home />} />
       <Route path="collection" element={<Collection />} />
       <Route path="about" element={<About />} />
       <Route path="contact" element={<Contact />} />
@@ -27,7 +27,7 @@ const router = createBrowserRouter(
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store} >
-      {/* <App /> */}
+
     <RouterProvider router={router} />
 
     </Provider>

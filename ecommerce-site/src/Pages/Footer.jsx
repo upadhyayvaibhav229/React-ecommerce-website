@@ -3,7 +3,7 @@ import { img } from '../Components/img'
 
 const Footer = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 md:place-items-center place-items-start p-2">
+    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 md:place-items-center place-items-start p-2 absolute">
       <div className="p-2">
         <img className='w-32 ' src={img.logo} alt="" />
         <p className='md:text-xl text-md text-gray-600 mt-2'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
