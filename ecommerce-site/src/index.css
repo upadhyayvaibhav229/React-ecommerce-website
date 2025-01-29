@@ -3,4 +3,6 @@
 @tailwind utilities;
 
 
-@import url('https://fonts.googleapis.com/css2?family=Prata&display=swap');
+::-webkit-scrollbar {
+    display: none;
+}

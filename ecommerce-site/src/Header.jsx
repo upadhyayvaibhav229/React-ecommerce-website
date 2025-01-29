@@ -1,138 +1,120 @@
 import React, { useState } from "react";
-import search from "./assets/frontend_assets/src_icon.png";
-import logo from "./assets/frontend_assets/logo.png";
-import cart from "./assets/frontend_assets/cart_icon.png";
 import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectShop, setSearchTerm } from "./Features/shopSlice";
+import { Menu, X, Search, ShoppingCart } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import logo from "./assets/frontend_assets/logo.png";
 
 const Header = () => {
   const [showSearch, setShowSearch] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
-  const { searchTerm } = useSelector(selectShop); // Get searchTerm from Redux store
+  const { searchTerm } = useSelector(selectShop);
 
-  const handleSearch = (e) => {
-    dispatch(setSearchTerm(e.target.value)); // Update searchTerm in Redux store
-  };
+  const handleSearch = (e) => dispatch(setSearchTerm(e.target.value));
+
+  
+  const menuItems = [
+    { name: "Home", path: "/" },
+    { name: "Collection", path: "/collection" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Admin Panel", path: "/admin" }, 
+  ];
 
   return (
-    <header>
-      <nav className="text-black shadow-md flex justify-between items-center p-4">
-        <div>
-          <Link to={"/"}>
-            <img src={logo} className="mr-3 h-12 cursor-pointer" alt="Logo" />
-          </Link>
-        </div>
+    <header className="shadow-md bg-white">
+      <nav className="container mx-auto flex justify-between items-center p-4">
+        {/* Logo */}
+        <Link to="/">
+          <img src={logo} className="h-12 cursor-pointer" alt="Logo" />
+        </Link>
 
-        <div className="hidden md:flex">
-          <ul className="flex space-x-4 text-xl font-serif">
-            <li>
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex gap-6 text-lg font-serif">
+          {menuItems.map(({ name, path }) => (
+            <li key={name}>
               <NavLink
-                to="/"
+                to={path}
                 className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 duration-200 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                }
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/collection"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 duration-200 ${
+                  `py-2 px-3 transition ${
                     isActive ? "text-orange-700 font-bold" : "text-gray-700"
-                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
+                  } hover:text-orange-700`
                 }
               >
-                Collection
+                {name}
               </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/about"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 duration-200 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                }
-              >
-                About
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 duration-200 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                }
-              >
-                Contact
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin"
-                className={({ isActive }) =>
-                  `bg-transparent text-sm border rounded-full p-1 font-light cursor-pointer duration-200 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                }
-              >
-                Admin Panel
-              </NavLink>
-            </li>
-          </ul>
-        </div>
+          ))}
+        </ul>
 
         {/* Icons */}
-        <div className="flex space-x-5 relative">
-          {/* Search Icon */}
-          <img
-            src={search}
-            alt="Search Icon"
-            className="h-5 cursor-pointer"
-            onClick={() => setShowSearch(!showSearch)}
-          />
+        <div className="flex items-center gap-5">
+          <button onClick={() => setShowSearch(!showSearch)}>
+            <Search className="w-5 h-5 cursor-pointer text-gray-700" />
+          </button>
 
-          {/* Cart Icon */}
-          <img
-            src={cart}
-            alt="Cart Icon"
-            className="h-5 cursor-pointer"
-          />
-        </div>
+          <button>
+            <ShoppingCart className="w-5 h-5 cursor-pointer text-gray-700" />
+          </button>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <button className="text-gray-700 hover:text-orange-700">
-            <i className="fas fa-bars text-xl"></i> {/* Hamburger icon */}
+          {/* Mobile Menu Button */}
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden">
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </nav>
 
-      {/* Full-Width Search Input */}
-      {showSearch && (
-        <div className="w-full flex justify-center items-center bg-gray-100 py-3 gap-x-4">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Search..."
-            className="w-11/12 md:w-1/4 border border-gray-400 rounded-full py-2 px-4"
-          />
-          <div
-            className="border-b rounded-full cursor-pointer text-2xl"
-            onClick={() => setShowSearch(!showSearch)}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.ul
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden bg-gray-100 absolute w-full left-0 top-16 shadow-lg flex flex-col items-center py-4 space-y-4"
           >
-            X
-          </div>
-        </div>
-      )}
+            {menuItems.map(({ name, path }) => (
+              <li key={name}>
+                <NavLink
+                  to={path}
+                  className="text-lg hover:text-orange-700 transition"
+                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                >
+                  {name}
+                </NavLink>
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+
+      {/* Search Bar */}
+      <AnimatePresence>
+        {showSearch && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="w-full flex justify-center items-center bg-gray-100 py-3 gap-x-4"
+          >
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Search..."
+              className="w-11/12 md:w-1/4 border border-gray-400 rounded-full py-2 px-4"
+            />
+            <button
+              className="border-b rounded-full cursor-pointer text-2xl"
+              onClick={() => setShowSearch(false)}
+            >
+              X
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
