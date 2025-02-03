@@ -27,12 +27,12 @@ const Relatedproducts = ({ category, subCategory }) => {
       </div>
       <div className="grid grid-cols-5 gap-4">
         {related.length > 0 ? (
-          related.map((item,i) => (
+          related.map((item, i) => (
             <Product_item
-              key={i} 
+              key={i}
               id={item._id}
               img={item.image}
-              name={item.name}
+              name={item._name}
             price={item.price}
           />
         ))
