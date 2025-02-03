@@ -15,8 +15,11 @@ console.log(cart);
 
   return (
     <>
-      <div>
+      <div className="border-l pl-14">
+      <div className="mt-11">
+
        <Title text1={"Your"} text2={"Cart"}/>
+      </div>
         {
           cart.cart?.map((el,id)=>(
             <div key={id}>
