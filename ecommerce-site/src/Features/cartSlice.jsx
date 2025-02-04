@@ -44,6 +44,17 @@ const cartSlice = createSlice({
       console.log("Cart Items:", state.cart);
     },
 
+    updateQuantity(state, action) {
+      const { id, quantity } = action.payload;
+      const item = state.cart.find(item => item.id === id);
+      if (item) {
+        item.quantity = quantity;
+        item.totalPrice = item.quantity * item.price;
+      }
+      state.totalprice = state.cart.reduce((total, item) => total + item.totalPrice, 0);
+      state.totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
+    },
+
     removeFromCart(state, action) {
       const itemId = action.payload;
       const item = state.cart.find(item => item.id === itemId);
