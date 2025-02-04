@@ -15,15 +15,13 @@ const cartSlice = createSlice({
   reducers: {
     addToCart(state, action) {
       const newItem = action.payload;
-
       if (!newItem.selectedSize) {
         toast.error("Please select a size");
         return;
       }
-
       const existingItem = state.cart.find(item => item.id === newItem.id);
-
-      if (existingItem) {
+      const selectedSize = newItem.selectedSize;
+      if (existingItem && existingItem.selectedSize === selectedSize) {
         existingItem.quantity++;
         existingItem.totalPrice = existingItem.quantity * existingItem.price;
       } else {
@@ -41,31 +39,39 @@ const cartSlice = createSlice({
       state.totalprice = state.cart.reduce((total, item) => total + item.totalPrice, 0);
       state.totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
 
-      console.log("Cart Items:", state.cart);
+      // console.log("Cart Items:", state.cart);
     },
 
     updateQuantity(state, action) {
       const { id, quantity } = action.payload;
       const item = state.cart.find(item => item.id === id);
+      
       if (item) {
-        item.quantity = quantity;
-        item.totalPrice = item.quantity * item.price;
+        if (quantity <= 0) {
+          state.cart = state.cart.filter(item => item.id !== id);
+        } else {
+          item.quantity = quantity;
+          item.totalPrice = item.price * quantity;
+        }
       }
       state.totalprice = state.cart.reduce((total, item) => total + item.totalPrice, 0);
       state.totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
     },
 
     removeFromCart(state, action) {
-      const itemId = action.payload;
-      const item = state.cart.find(item => item.id === itemId);
 
-      if (item && item.quantity > 0) {
-        item.quantity--;
-        item.totalPrice = item.quantity * item.price;
+      const id = action.payload;
+      state.cart = state.cart.filter(item => item.id !== id);
+      
+      
+      
+      if(state.cart.length === 0) {
+        state.totalprice = 0;
+        state.totalQuantity = 0;
+      } else {
+        state.totalprice = state.cart.reduce((total, item) => total + item.totalPrice, 0);
+        state.totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
       }
-
-      state.totalprice = state.cart.reduce((total, item) => total + item.totalPrice, 0);
-      state.totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
     },
   },
 });
@@ -75,5 +81,5 @@ export const getCartCount = (state) => {
   return state.cart.cart.reduce((count, item) => count + item.quantity, 0);
 };
 
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectShop } from "../Features/shopSlice";
 import Header from "../Header";
 import Title from "../Components/Title";
-import { removeFromCart } from "../Features/cartSlice";
+import { removeFromCart, updateQuantity } from "../Features/cartSlice";
 import CartTotal from "../Components/CartTotal";
 
 const Cart = () => {
@@ -17,6 +17,11 @@ const Cart = () => {
     console.log(cart);
     
   };
+
+  const handleQuantityChange = (id, action) => {
+    dispatch(updateQuantity({ id, quantity: action }));
+    console.log(cart);
+  }
   return (
     <>
 
@@ -49,14 +54,14 @@ const Cart = () => {
 
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => handleQuantityChange(item.id, "decrement")}
+                  onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                   className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                 >
                   -
                 </button>
                 <span className="text-lg font-medium">{item.quantity}</span>
                 <button
-                  onClick={() => handleQuantityChange(item.id, "increment")}
+                  onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                   className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                 >
                   +
