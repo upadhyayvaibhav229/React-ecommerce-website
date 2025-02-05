@@ -20,12 +20,12 @@ const Relatedproducts = ({ category, subCategory }) => {
   return (
     <>
       {/* display related product */}
-      <div className="my-24">
+      <div className="">
         <div className="text-center py-8 text-3xl">
           <Title text1={"Related"} text2={"Products"} />
         </div>
       </div>
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-5 gap-4 place-items-center">
         {related.length > 0 ? (
           related.map((item, i) => (
             <Product_item

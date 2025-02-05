@@ -12,14 +12,14 @@ const Cart = () => {
   const dispatch = useDispatch();
 
  
-  const handleRemoveItem = (id) => {
-    dispatch(removeFromCart(id));
+  const handleRemoveItem = (id, selectedSize) => {
+    dispatch(removeFromCart({ id, selectedSize }));
     console.log(cart);
     
   };
 
-  const handleQuantityChange = (id, action) => {
-    dispatch(updateQuantity({ id, quantity: action }));
+  const handleQuantityChange = (id, selectedSize, action) => {
+    dispatch(updateQuantity({ id, selectedSize, quantity: action }));
     console.log(cart);
   }
   return (
@@ -54,14 +54,14 @@ const Cart = () => {
 
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                  onClick={() => handleQuantityChange(item.id, item.selectedSize, item.quantity - 1)}
                   className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                 >
                   -
                 </button>
                 <span className="text-lg font-medium">{item.quantity}</span>
                 <button
-                  onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                  onClick={() => handleQuantityChange(item.id, item.selectedSize, item.quantity + 1)}
                   className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
                 >
                   +
@@ -69,7 +69,7 @@ const Cart = () => {
               </div>
 
               <button
-                onClick={() => handleRemoveItem(item.id)}
+                onClick={() => handleRemoveItem(item.id, item.selectedSize)}
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
               >
                 Remove

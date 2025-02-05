@@ -99,8 +99,8 @@ const Products = () => {
             </div>
           </div>
 
-          {cart.some((item) => item._id === productData._id) ? (
-            <button className="bg-gray-500 text-white py-2 px-4">ADDED</button>
+          {cart.some((item) => item.id === productData._id && item.selectedSize === sizes) ? (
+            <button className="bg-white border border-black text-black py-2 px-4">ADDED TO CART</button>
           ) : (
             <button
               onClick={() =>

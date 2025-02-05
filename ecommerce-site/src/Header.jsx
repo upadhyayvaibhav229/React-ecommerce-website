@@ -1,26 +1,26 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartCount } from "./Features/cartSlice";
-import { setSearchTerm } from "./Features/shopSlice";
-import { Search, ShoppingCart } from "lucide-react";
+import { ShoppingCart, Search } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { img } from "./Components/img";
+import { useSearchFilter } from "./Features/SearchFilter";
+import SearchBar from "./Components/SearchBar";
 
 const Header = () => {
-  const [showSearch, setShowSearch] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
-  const { searchTerm } = useSelector(state => state.shop);
   const totalQuantity = useSelector(getCartCount);
   const location = useLocation();
 
-  const handleSearch = (e) => dispatch(setSearchTerm(e.target.value));
+  // Get search filter state
+  const { showSearch, setShowSearch } = useSearchFilter();
 
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Collection", path: "/collection" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
-    // { name: "Products", path: "/products" },
   ];
 
   return (
@@ -28,7 +28,7 @@ const Header = () => {
       <nav className="container mx-auto flex justify-between items-center p-4">
         {/* Logo */}
         <Link to="/">
-          <img src="/path/to/logo.png" className="h-12 cursor-pointer" alt="Logo" />
+          <img src={img.logo} className="h-12 cursor-pointer" alt="Logo" />
         </Link>
 
         {/* Navbar Links */}
@@ -66,6 +66,9 @@ const Header = () => {
           </Link>
         </div>
       </nav>
+
+      {/* Conditionally render the Search Bar */}
+      {showSearch && <SearchBar />}
     </header>
   );
 };
