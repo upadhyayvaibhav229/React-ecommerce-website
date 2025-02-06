@@ -37,9 +37,8 @@ const Header = () => {
             <li key={link.name}>
               <Link
                 to={link.path}
-                className={`relative pb-2 ${
-                  location.pathname === link.path ? "text-blue-600" : ""
-                }`}
+                className={`relative pb-2 ${location.pathname === link.path ? "text-blue-600" : ""
+                  }`}
               >
                 {link.name}
                 {location.pathname === link.path && (
@@ -63,6 +62,11 @@ const Header = () => {
                 {totalQuantity}
               </span>
             )}
+          </Link>
+
+          <Link to={'/login'}>
+
+            <img src={img.profile_icon} className="w-5 h-5" alt="" />
           </Link>
         </div>
       </nav>

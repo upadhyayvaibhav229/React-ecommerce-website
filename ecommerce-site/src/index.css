@@ -6,3 +6,10 @@
 ::-webkit-scrollbar {
     display: none;
 }
+
+*{
+    font-family: "Roboto", serif;
+    font-optical-sizing: auto;
+    
+  
+}
