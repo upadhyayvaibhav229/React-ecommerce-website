@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Input from "../Components/Input";
 
@@ -8,18 +8,17 @@ function Signup() {
     const [error, setError] = useState("");
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    // const create = async (data) => {
-    //     setError("");
-    //     try {
-    //         // Assuming authService.createAccount handles user creation
-    //         const userData = await authService.createAccount(data);
-    //         if (userData) {
-    //             navigate("/");
-    //         }
-    //     } catch (error) {
-    //         setError(error.message);
-    //     }
-    // };
+    // ✅ Correct Form Submission Handler
+    const handleFormSubmit = (data) => {
+        console.log("Form Data:", data); // ✅ Check if data is submitted correctly
+        if (!data.email || !data.password) {
+            setError("Please fill in all the fields");
+            return;
+        }
+        // ✅ Perform Signup Logic (API call, Redux, etc.)
+        // signup(data);
+        // navigate("/");
+    };
 
     return (
         <div className="flex items-center justify-center font-serif mt-5">
@@ -27,15 +26,14 @@ function Signup() {
                 <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create an account</h2>
                 <p className="mt-2 text-center text-base text-black/60">
                     Already have an account?&nbsp;
-                    <button onClick={()=>navigate('/login')} className="font-medium text-primary transition-all duration-200 hover:underline">
+                    <button onClick={() => navigate('/login')} className="font-medium text-primary transition-all duration-200 hover:underline">
                         Sign In
                     </button>
                 </p>
                 {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
 
-                <form 
-                // onSubmit={handleSubmit(create)}
-                >
+                {/* ✅ Use handleSubmit for form submission */}
+                <form onSubmit={handleSubmit(handleFormSubmit)}>
                     <div className="space-y-5">
                         <Input
                             label="Full Name: "

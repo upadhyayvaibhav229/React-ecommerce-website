@@ -12,6 +12,11 @@ function Login() {
   // const { register, handleSubmit } = useForm()
   const [error, setError] = useState("")
 
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
   // const login = async (data) => {
   //   setError("")
   //   try {
@@ -25,6 +30,17 @@ function Login() {
   //     setError(error.message)
   //   }
   // }
+
+  const handleFormSubmit = (e) =>{
+    e.preventDefault()
+    setData({...data, [e.target.name]: e.target.value})
+    if(data.email === "" || data.password === ""){
+      setError("Please fill in all the fields")
+    }
+    // login(data)
+    // navigate("/")
+
+  }
 
   return (
     <div
@@ -47,12 +63,14 @@ function Login() {
           </button>
         </p>
         {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-        <form  className='mt-8'>
+        <form  className='mt-8' onSubmit={handleFormSubmit}>
           <div className='space-y-5'>
             <Input
               label="Email: "
               placeholder="Enter your email"
               type="email"
+              name="email"
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
               // {...register("email", {
               //   required: true,
               //   validate: {
@@ -65,6 +83,8 @@ function Login() {
               label="Password: "
               type="password"
               placeholder="Enter your password"
+              name="password"
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
               // {...register("password", {
               //   required: true,
               // })}

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCartCount } from "./Features/cartSlice";
+import { getCartCount } from "../Features/cartSlice";
 import { ShoppingCart, Search } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { img } from "./Components/img";
-import { useSearchFilter } from "./Features/SearchFilter";
-import SearchBar from "./Components/SearchBar";
+import { img } from "./img";
+// import { useSearchFilter } from "../Features/SearchFilter";
 
-const Header = () => {
+import SearchBar from "./SearchBar";
+import { useSearchFilter } from "../Features/SearchFilter";
+
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const totalQuantity = useSelector(getCartCount);
@@ -64,10 +66,22 @@ const Header = () => {
             )}
           </Link>
 
+          <div className="group relative">
+
           <Link to={'/login'}>
 
             <img src={img.profile_icon} className="w-5 h-5" alt="" />
           </Link>
+            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4  p-2">
+            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500">
+
+              <p className="cursor-pointer hover:text-black">My Profile</p>
+              <p className="cursor-pointer hover:text-black">Order</p>
+              <p className="cursor-pointer hover:text-black">Logout</p>
+            </div>
+            </div>
+          </div>
+
         </div>
       </nav>
 
@@ -77,4 +91,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Navbar;

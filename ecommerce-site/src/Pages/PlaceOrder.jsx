@@ -4,14 +4,27 @@ import Title from "../Components/Title";
 import Input from "../Components/Input";
 import CartTotal from "../Components/CartTotal";
 import { img } from "../Components/img";
+import { useDispatch, useSelector } from "react-redux";
+import { placeOrder } from "../Features/cartSlice"; 
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+ 
+  const handlePaymentChange = (selectedMethod) => {
+    setMethod(selectedMethod);
+    dispatch(setMethod(selectedMethod)); 
+  };
+
+  const handlePlaceOrder = () => {
+    dispatch(placeOrder());
+    navigate("/order");
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen py-8 px-4 sm:px-10 lg:px-16">
-      {/* Back to Cart Button */}
       <button
         onClick={() => navigate("/cart")}
         className="bg-green-800 text-white py-2 px-4 rounded-full hover:bg-green-700 transition-all"
@@ -61,7 +74,7 @@ const PlaceOrder = () => {
             <div className="flex flex-col gap-4 mt-4">
               {/* Stripe Payment Option */}
               <div
-                onClick={() => setMethod("stripe")}
+                onClick={() => handlePaymentChange("stripe")}
                 className={`flex items-center gap-3 border p-3 rounded-lg cursor-pointer transition-all ${
                   method === "stripe" ? "bg-gray-100 border-green-600" : "hover:bg-gray-50"
                 }`}
@@ -76,7 +89,7 @@ const PlaceOrder = () => {
 
               {/* Razorpay Payment Option */}
               <div
-                onClick={() => setMethod("razorpay")}
+                onClick={() => handlePaymentChange("razorpay")}
                 className={`flex items-center gap-3 border p-3 rounded-lg cursor-pointer transition-all ${
                   method === "razorpay" ? "bg-gray-100 border-green-600" : "hover:bg-gray-50"
                 }`}
@@ -91,7 +104,7 @@ const PlaceOrder = () => {
 
               {/* Cash on Delivery (COD) Option */}
               <div
-                onClick={() => setMethod("cod")}
+                onClick={() => handlePaymentChange("cod")}
                 className={`flex items-center gap-3 border p-3 rounded-lg cursor-pointer transition-all ${
                   method === "cod" ? "bg-gray-100 border-green-600" : "hover:bg-gray-50"
                 }`}
@@ -109,7 +122,7 @@ const PlaceOrder = () => {
             <div className="flex flex-col sm:flex-row justify-between mt-6 gap-4">
               {/* Place Order Button */}
               <button
-                onClick={() => navigate("/order")}
+                onClick={handlePlaceOrder}
                 className="bg-black text-white px-6 py-3 rounded-lg w-full sm:w-auto hover:bg-gray-900 transition-all"
               >
                 PLACE ORDER

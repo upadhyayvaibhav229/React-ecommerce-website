@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectShop } from "../Features/shopSlice";
-import Header from "../Header";
+// import Header from "../Header";
 import Title from "../Components/Title";
 import { removeFromCart, updateQuantity } from "../Features/cartSlice";
 import CartTotal from "../Components/CartTotal";

@@ -85,6 +85,13 @@ const cartSlice = createSlice({
         0
       );
     },
+
+    placeOrder: (state) => {
+      state.cart = state.cart.map((item) => ({
+          ...item,
+          paymentMethod: state.paymentMethod,
+      }));
+  }
   },
 });
 
@@ -92,5 +99,5 @@ export const getCartCount = (state) => {
   return state.cart.cart.reduce((count, item) => count + item.quantity, 0);
 };
 
-export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, placeOrder } = cartSlice.actions;
 export default cartSlice.reducer;
