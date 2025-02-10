@@ -14,6 +14,7 @@ import Cart from './Pages/Cart.jsx';
 import Login from './Pages/Login.jsx';
 import Signup from './Pages/Signup.jsx';
 import PlaceOrder from './Pages/PlaceOrder.jsx';
+import Order from './Components/Order.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path='login' element = {<Login/>}/>
       <Route path='sign-up' element = {<Signup/>}/>
       <Route path='place-order' element = {<PlaceOrder/>}/>
+      <Route path='order' element= {<Order/>}/>
     </Route>
   )
 );
