@@ -73,8 +73,9 @@ import contact_img from '../assets/frontend_assets/contact_img.png'
 import razorpay_logo from '../assets/frontend_assets/razorpay_logo.png'
 import stripe_logo from '../assets/frontend_assets/stripe_logo.png'
 import cross_icon from '../assets/frontend_assets/cross_icon.png'
-
+import default_img from '../assets/frontend_assets/default.png'
 export const img = {
+    default_img,
     p_img1,
     p_img2_1,
     p_img2_2,

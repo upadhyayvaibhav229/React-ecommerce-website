@@ -1,103 +1,88 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-// import { login as authLogin } from '../store/authSlice'
-import Input from '../Components/Input'
-import { useDispatch } from "react-redux"
-// import authService from "../appwrite/auth"
-// import { useForm } from "react-hook-form"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../Config/firebaseConfig";
+import { useDispatch } from "react-redux";
+import { login } from "../Features/authSlice";
 
 function Login() {
-  const navigate = useNavigate()
-  // const dispatch = useDispatch()
-  // const { register, handleSubmit } = useForm()
-  const [error, setError] = useState("")
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
 
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  // const login = async (data) => {
-  //   setError("")
-  //   try {
-  //     const session = await authService.login(data)
-  //     if (session) {
-  //       const userData = await authService.getCurrentUser()
-  //       if (userData) dispatch(authLogin(userData));
-  //       navigate("/")
-  //     }
-  //   } catch (error) {
-  //     setError(error.message)
-  //   }
-  // }
-
-  const handleFormSubmit = (e) =>{
-    e.preventDefault()
-    setData({...data, [e.target.name]: e.target.value})
-    if(data.email === "" || data.password === ""){
-      setError("Please fill in all the fields")
+  const handleLogin = async (data) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+  
+      // Dispatch login action with user details
+      dispatch(login({ uid: user.uid, email: user.email }));
+  
+      // Navigate to home page
+      navigate("/");
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        setError("User not found. Please sign up first.");
+      } else if (error.code === "auth/wrong-password") {
+        setError("Incorrect password. Please try again.");
+      } else {
+        setError(error.message);
+      }
     }
-    // login(data)
-    // navigate("/")
-
-  }
+  };
+  
 
   return (
-    <div
-      className='flex items-center justify-center w-full mt-5 font-serif'
-    >
-      <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
-        <div className="mb-2 flex justify-center">
-          <span className="inline-block w-full max-w-[100px]">
-            {/* <Logo width="100%" /> */}
-          </span>
-        </div>
-        <h2 className="text-center text-2xl font-bold leading-tight">Sign in to your account</h2>
+    <div className="flex items-center justify-center font-serif mt-5">
+      <div className="mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10">
+        <h2 className="text-center text-2xl font-bold leading-tight">Login</h2>
         <p className="mt-2 text-center text-base text-black/60">
-          Don&apos;t have any account?&nbsp;
+          Don't have an account?&nbsp;
           <button
-            onClick={()=>navigate("/sign-up")}
+            onClick={() => navigate("/sign-up")}
             className="font-medium text-primary transition-all duration-200 hover:underline"
           >
             Sign Up
           </button>
         </p>
         {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-        <form  className='mt-8' onSubmit={handleFormSubmit}>
-          <div className='space-y-5'>
-            <Input
-              label="Email: "
-              placeholder="Enter your email"
+
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <div className="space-y-5">
+            <label>Email:</label>
+            <input
               type="email"
-              name="email"
-              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
-              // {...register("email", {
-              //   required: true,
-              //   validate: {
-              //     matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-              //       "Email address must be a valid address",
-              //   }
-              // })}
+              className="border p-2 w-full"
+              {...register("email", { required: "Email is required" })}
             />
-            <Input
-              label="Password: "
+            {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+
+            <label>Password:</label>
+            <input
               type="password"
-              placeholder="Enter your password"
-              name="password"
-              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
-              // {...register("password", {
-              //   required: true,
-              // })}
+              className="border p-2 w-full"
+              {...register("password", { required: "Password is required" })}
             />
+            {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 py-2 text-white text-xl rounded-md font-bold"
-            >Sign in</button>
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2"
+            >
+              Login
+            </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

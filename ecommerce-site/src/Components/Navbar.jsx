@@ -2,21 +2,33 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCartCount } from "../Features/cartSlice";
 import { ShoppingCart, Search } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { img } from "./img";
-// import { useSearchFilter } from "../Features/SearchFilter";
-
 import SearchBar from "./SearchBar";
 import { useSearchFilter } from "../Features/SearchFilter";
+import { logout } from "../Features/authSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../Config/firebaseConfig";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const totalQuantity = useSelector(getCartCount);
   const location = useLocation();
-
-  // Get search filter state
   const { showSearch, setShowSearch } = useSearchFilter();
+
+  const user = useSelector((state) => state.auth.user); // Get user state from Redux
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Firebase sign out
+      dispatch(logout()); // Update Redux state
+      navigate("/login"); // Redirect to login page
+    } catch (error) {
+      console.error("Logout Error:", error.message);
+    }
+  };
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -39,8 +51,9 @@ const Navbar = () => {
             <li key={link.name}>
               <Link
                 to={link.path}
-                className={`relative pb-2 ${location.pathname === link.path ? "text-blue-600" : ""
-                  }`}
+                className={`relative pb-2 ${
+                  location.pathname === link.path ? "text-blue-600" : ""
+                }`}
               >
                 {link.name}
                 {location.pathname === link.path && (
@@ -66,22 +79,30 @@ const Navbar = () => {
             )}
           </Link>
 
-          <div className="group relative">
-
-          <Link to={'/login'}>
-
-            <img src={img.profile_icon} className="w-5 h-5" alt="" />
-          </Link>
-            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4  p-2">
-            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500">
-
-              <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Order</p>
-              <p className="cursor-pointer hover:text-black">Logout</p>
+          {/* Profile / Login Section */}
+          {user ? (
+            <div className="group relative">
+              <img src={img.profile_icon} className="w-6 h-6 cursor-pointer" alt="Profile" />
+              <div className="group-hover:block hidden absolute right-0 mt-2 p-2 w-36 bg-slate-100 text-gray-600 shadow-md rounded-md">
+                <Link to="/profile" className="block px-4 py-2 hover:text-black">
+                  My Profile
+                </Link>
+                <Link to="/order" className="block px-4 py-2 hover:text-black">
+                  Orders
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 hover:text-black"
+                >
+                  Logout
+                </button>
+              </div>
             </div>
-            </div>
-          </div>
-
+          ) : (
+            <Link to="/login" className="text-gray-700 hover:underline">
+              Login
+            </Link>
+          )}
         </div>
       </nav>
 
