@@ -47,7 +47,8 @@ function Signup() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
-        data.password
+        data.password,
+        data.phone
       );
       const user = userCredential.user;
 
@@ -60,6 +61,7 @@ function Signup() {
       await setDoc(userDocRef, {
         email: data.email,
         name: data.name,
+        phone: data.phone,
       });
 
       // Navigate to home page after signup
@@ -95,6 +97,14 @@ function Signup() {
             />
             {errors.name && (
               <p className="text-red-600">{errors.name.message}</p>
+            )}
+            <Input
+              label="Phone Number: "
+              placeholder="Enter your phone number"
+              {...register("phone", { required: "Phone number is required" })}
+            />
+            {errors.phone && (
+              <p className="text-red-600">{errors.phone.message}</p>
             )}
 
             <Input

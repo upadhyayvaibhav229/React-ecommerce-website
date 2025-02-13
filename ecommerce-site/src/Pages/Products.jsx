@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectShop } from "../Features/shopSlice";
 import { addToCart } from "../Features/cartSlice";
 import { img } from "../Components/img";
 import Relatedproducts from "../Components/Relatedproducts";
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase authentication
 
 const Products = () => {
   const { id } = useParams();
@@ -13,8 +14,20 @@ const Products = () => {
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState("");
   const [sizes, setSizes] = useState("");
+  const [user, setUser] = useState(null); // Store user authentication status
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const auth = getAuth();
+
+  // Check user authentication status
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     console.log(cart);
@@ -33,14 +46,30 @@ const Products = () => {
   useEffect(() => {
     fetchProductData();
     window.scrollTo({ top: 0, behavior: "smooth" });
-    console.log(productData);
   }, [id, products]);
-
-  
 
   if (!productData) {
     return <div>Loading...</div>;
   }
+
+  const handleAddToCart = () => {
+    if (!user) {
+      alert("Please log in to add items to the cart!");
+      navigate("/login"); 
+      return;
+    }
+
+    dispatch(
+      addToCart({
+        id: productData._id,
+        title: productData.name,
+        price: productData.price,
+        image: productData.image[0],
+        totalPrice: productData.price,
+        selectedSize: sizes,
+      })
+    );
+  };
 
   return (
     <div className="border-t-2 pt-10 transition-opacity duration-500 opacity-100 p-2 font-serif">
@@ -99,24 +128,21 @@ const Products = () => {
             </div>
           </div>
 
-          {cart.some((item) => item.id === productData._id && item.selectedSize === sizes) ? (
-            <button className="bg-white border border-black text-black py-2 px-4">ADDED TO CART</button>
+          {cart.some(
+            (item) => item.id === productData._id && item.selectedSize === sizes
+          ) ? (
+            <button className="bg-white border border-black text-black py-2 px-4">
+              ADDED TO CART
+            </button>
           ) : (
             <button
-              onClick={() =>
-                dispatch(
-                  addToCart({
-                    id: productData._id, 
-                    title: productData.name, 
-                    price: productData.price,
-                    image: productData.image[0],
-                    // quantity: 1,
-                    totalPrice: productData.price,
-                    selectedSize: sizes
-                  })
-                )
-              }
-              className="bg-black text-white py-2 px-4 active:bg-gray-500"
+              onClick={handleAddToCart}
+              className={`py-2 px-4 ${
+                user
+                  ? "bg-black text-white active:bg-gray-500"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!user}
             >
               ADD TO CART
             </button>

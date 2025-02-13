@@ -1,33 +1,46 @@
-import React from 'react'
-import { img } from '../Components/img'
+import React from "react";
+import { img } from "../Components/img";
 
 const Footer = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 place-items-end  p-2 absolute bg-gray-300 mt-5">
-      <div className="p-2">
-        <img className='w-32 ' src={img.logo} alt="" />
-        <p className='md:text-xl text-md text-gray-600 mt-2'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+    <div className="bg-gray-300 p-6 mt-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center sm:text-left">
+        {/* Logo & Description */}
+        <div className="flex flex-col items-center sm:items-start">
+          <img className="w-32" src={img.logo} alt="Logo" />
+          <p className="text-gray-600 text-sm sm:text-md mt-2 max-w-xs">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+          </p>
+        </div>
+
+        {/* Company Links */}
+        <div className="space-y-2">
+          <h1 className="font-bold text-lg sm:text-xl">Company</h1>
+          <ul className="text-gray-600 space-y-1">
+            <li className="hover:text-black cursor-pointer">Home</li>
+            <li className="hover:text-black cursor-pointer">Collection</li>
+            <li className="hover:text-black cursor-pointer">Delivery</li>
+            <li className="hover:text-black cursor-pointer">Privacy Policy</li>
+          </ul>
+        </div>
+
+        {/* Contact Info */}
+        <div className="space-y-2">
+          <h1 className="text-lg sm:text-xl font-bold">GET IN TOUCH</h1>
+          <ul className="text-gray-600 space-y-1">
+            <li className="hover:text-black cursor-pointer">+1-000-000-0000</li>
+            <li className="hover:text-black cursor-pointer">greatstackdev@gmail.com</li>
+            <li className="hover:text-black cursor-pointer">Instagram</li>
+          </ul>
+        </div>
       </div>
-      <div className="space-y-2">
-        <h1 className='font-bold text-xl'>Company</h1>
-        <ul className='text-gray-600'>
-          <li>Home</li>
-          <li>Collection</li>
-          <li>Delivery</li>
-          <li>Privacy Policy</li>
-        </ul>
-      </div>
-      <div className="space-y-4">
-        <h1 className='text-xl font-bold'>GET IN TOUCH</h1>
-        <ul className='text-gray-600'>
-          <li>+1-000-000-0000</li>
-          <li>greatstackdev@gmail.com</li>
-          <li>Instagram</li>
-        </ul>
+
+      {/* Bottom Copyright */}
+      <div className="text-center text-gray-600 text-sm mt-6 border-t pt-4">
+        &copy; 2025 GreatStack. All rights reserved.
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
-
+export default Footer;

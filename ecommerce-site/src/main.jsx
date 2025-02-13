@@ -27,7 +27,7 @@ import Profile from "./Components/Profile.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index element={<Home />} />
+      <Route  index element={<Home />} />
       <Route path="collection" element={<Collection />} />
       <Route path="about" element={<About />} />
       <Route path="contact" element={<Contact />} />

@@ -1,32 +1,40 @@
-// Components/Breadcrumb.jsx
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 
-const Breadcrumb = () => {
-  const location = useLocation();
-  const pathnames = location.pathname.split('/').filter((x) => x);
+const BreadCrumbs = () => {
+    const location = useLocation();
 
-  return (
-    <nav aria-label="breadcrumb">
-      <ol className="flex space-x-2 text-sm text-gray-600">
-        <li className="breadcrumb-item">
-          <Link to="/" className="hover:text-blue-600">Home</Link>
-        </li>
-        {pathnames.map((value, index) => {
-          const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-          const isLast = index === pathnames.length - 1;
-          return isLast ? (
-            <li key={to} className="text-gray-400" aria-current="page">
-              {value}
-            </li>
-          ) : (
-            <li key={to}>
-              <Link to={to} className="hover:text-blue-600">{value}</Link>
-            </li>
-          );
-        })}
-      </ol>
-    </nav>
-  );
+    let currentLink = "";
+    const pathSegments = location.pathname.split('/').filter(crumb => crumb !== '' );
+    console.log(location,"current location");
+    
+    const crumbs = pathSegments.map((crumb, index) => {
+        currentLink += `/${crumb}`;
+
+        // Convert URL slug to readable text
+        const breadcrumbName = decodeURIComponent(crumb.replace(/-/g, ' '));
+
+        return (
+            <div key={crumb} className="inline-flex items-center hidden sm:block">
+                {index > 0 && <span className="mx-2 text-gray-400">/</span>} 
+                <Link to={currentLink} className="text-blue-500 hover:underline capitalize">
+                    {breadcrumbName}
+                </Link>
+            </div>
+        );
+    });
+
+    console.log(currentLink,"func current location");
+
+
+    return (
+        <nav className="p-4 bg-gray-100 rounded-md">
+            <div className="flex items-center">
+                <Link to="/" className="text-blue-500 hover:underline">Home</Link>
+                {crumbs.length > 0 && <span className="mx-2 text-gray-400">/</span>}
+                {crumbs}
+            </div>
+        </nav>
+    );
 };
 
-export default Breadcrumb;
+export default BreadCrumbs;
