@@ -10,12 +10,12 @@ const Contact = () => {
   </div>
 
 
-  <div className="flex justify-center items-center mt-5 gap-x-5">
+  <div className="flex flex-wrap justify-center items-center mt-5 gap-x-5">
   <div>
 
     <img src={img.contact_img} className="h-[450px]" alt="Contact Us" />
   </div>
-  <div className="ml-5 w-1/6 space-y-6">
+  <div className="ml-5 sm:w-1/6 w-full mt-3 space-y-4">
     <h1 className="font-bold text-gray-600 text-xl">Our Store</h1>
     <p className="text-gray-500 text-md">54709 Willms Station <br />
     Suite 350, Washington, USA</p>
@@ -36,7 +36,7 @@ const Contact = () => {
   </div>
 
     {/* <!-- Subscription Section --> */}
-    <div className="text-center mt-10">
+    <div className="text-center mt-10 p-2">
           <p className="text-2xl font-medium text-gray-800">
             Subscribe now &amp; get 20% off
           </p>
@@ -46,7 +46,7 @@ const Contact = () => {
           </p>
           <form className="w-full sm:w-1/2 flex items-center gap-3 mx-auto my-6 border pl-3">
             <input
-              className="w-full sm:flex-1 outline-none py-2 placeholder:text-gray-500"
+              className="w-full border border-gray-300 sm:flex-1 outline-none py-2 placeholder:text-gray-500 p-2"
               type="email"
               placeholder="Enter your email"
               required

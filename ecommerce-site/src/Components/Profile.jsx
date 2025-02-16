@@ -70,8 +70,8 @@ const Profile = () => {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white w-[450px] shadow-2xl rounded-2xl p-8 text-center">
+      <div className="min-h-screen flex items-start justify-center bg-gray-100">
+        <div className="bg-white w-[450px] mt-4 shadow-2xl rounded-2xl p-8 text-center">
         
 
           {loading ? (
@@ -82,7 +82,7 @@ const Profile = () => {
           ) : userDetail ? (
             <div>
          
-              <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-row justify-around items-center">
               {/* Back button */}
                 {/* Profile Image */}
                 <div className="relative">
