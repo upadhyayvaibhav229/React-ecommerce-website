@@ -14,7 +14,7 @@ const BreadCrumbs = () => {
         const breadcrumbName = decodeURIComponent(crumb.replace(/-/g, ' '));
 
         return (
-            <div key={crumb} className="inline-flex items-center hidden sm:block">
+            <div key={crumb} className="inline-flex items-center">
                 {index > 0 && <span className="mx-2 text-gray-400">/</span>} 
                 <Link to={currentLink} className="text-blue-500 hover:underline capitalize">
                     {breadcrumbName}
@@ -27,7 +27,7 @@ const BreadCrumbs = () => {
 
 
     return (
-        <nav className="p-4 bg-gray-100 rounded-md">
+        <nav className="p-1 bg-gray-100 rounded-md">
             <div className="flex items-center">
                 <Link to="/" className="text-blue-500 hover:underline">Home</Link>
                 {crumbs.length > 0 && <span className="mx-2 text-gray-400">/</span>}
