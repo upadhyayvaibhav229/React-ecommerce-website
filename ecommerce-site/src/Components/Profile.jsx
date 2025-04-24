@@ -32,6 +32,7 @@ const Profile = () => {
     const fetchUserDetails = async () => {
       try {
         const user = auth.currentUser;
+        console.log(user);
         if (user) {
           const db = getFirestore();
           const userDocRef = doc(db, "users", user.uid);
