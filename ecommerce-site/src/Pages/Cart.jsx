@@ -6,6 +6,7 @@ import Title from "../Components/Title";
 import { removeFromCart, updateQuantity } from "../Features/cartSlice";
 import CartTotal from "../Components/CartTotal";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -14,9 +15,18 @@ const Cart = () => {
   const dispatch = useDispatch();
 
 
+  const checkout = () =>{
+    console.log();
+    if (cart.cart.length === 0) {
+      toast.error("No item is added to checkout")
+    }else{
+      navigate('/place-order')
+    }
+  }
   const handleRemoveItem = (id, selectedSize) => {
+    
     dispatch(removeFromCart({ id, selectedSize }));
-    console.log(cart);
+    // console.log(cart);
 
   };
 
@@ -90,7 +100,7 @@ const Cart = () => {
           <CartTotal />
           <div className="w-full flex items-center justify-center">
             <button
-              onClick={() => navigate("/place-order")}
+              onClick={checkout}
               className=" bg-black text-white font-medium mt-6 px-8 py-3 rounded hover:bg-gray-800 transition duration-300"
             >
               PROCEED TO CHECKOUT

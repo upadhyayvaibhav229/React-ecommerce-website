@@ -29,9 +29,9 @@ const Products = () => {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
+  // useEffect(() => {
+  //   console.log(cart);
+  // }, [cart]);
 
   const fetchProductData = () => {
     const foundProduct = products.find((item) => item._id === id);

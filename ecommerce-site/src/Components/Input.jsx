@@ -1,9 +1,11 @@
+import { p } from "framer-motion/client";
 import { forwardRef, useId } from "react";
 
 const Input = forwardRef(function Input({
     label,
     type = "text",
     className = "",
+    error,
     ...props
 }, ref) {
     const id = useId();
@@ -25,7 +27,15 @@ const Input = forwardRef(function Input({
                     id={id}
                 />
 
+                {
+                    error && (
+                        <p className="text-red-500 text-sm mt-1">{error}</p>
+                    )
+                }
+
             </div>
+
+
         </>
     )
 
