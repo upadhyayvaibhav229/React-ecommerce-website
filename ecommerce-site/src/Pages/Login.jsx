@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../Config/firebaseConfig";
 import { useDispatch } from "react-redux";
-import { login } from "../Features/authSlice";
+// import { login } from "../Features/authSlice";
+import { loginUser } from "../Features/authSlice";
+import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState()
 
   const {
     register,
@@ -17,27 +18,28 @@ function Login() {
     formState: { errors },
   } = useForm();
 
+  const [serverError, setServerError] = useState("");
+
+
   const handleLogin = async (data) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-      const user = userCredential.user;
-  
-      // Dispatch login action with user details
-      dispatch(login({ uid: user.uid, email: user.email }));
-  
-      // Navigate to home page
-      navigate("/");
-    } catch (error) {
-      if (error.code === "auth/user-not-found") {
-        setError("User not found. Please sign up first.");
-      } else if (error.code === "auth/wrong-password") {
-        setError("Incorrect password. Please try again.");
-      } else {
-        setError(error.message);
+      const result = await dispatch(
+        loginUser({
+          identifier: data.identifier,
+          password: data.password
+        })
+      ).unwrap();
+      console.log(result);
+
+      if (result) {
+        toast.success("User logged in successfully");
+        navigate("/");
       }
+    } catch (error) {
+      setServerError(error || "Login failed");
     }
   };
-  
+
 
   return (
     <div className="flex items-center justify-center font-serif mt-5">
@@ -52,17 +54,24 @@ function Login() {
             Sign Up
           </button>
         </p>
-        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+
+        {(serverError || error) && (
+          <p className="text-red-600 mt-4 text-center">
+            {serverError || error}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit(handleLogin)}>
           <div className="space-y-5">
-            <label>Email:</label>
+            <label>Email or Username:</label>
             <input
-              type="email"
+              type="text"
               className="border p-2 w-full"
-              {...register("email", { required: "Email is required" })}
+              {...register("identifier", { required: "Email or Username is required" })}
             />
-            {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+            {errors.identifier && (
+              <p className="text-red-600">{errors.identifier.message}</p>
+            )}
 
             <label>Password:</label>
             <input
@@ -70,13 +79,16 @@ function Login() {
               className="border p-2 w-full"
               {...register("password", { required: "Password is required" })}
             />
-            {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-600">{errors.password.message}</p>
+            )}
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2"
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
           </div>
         </form>

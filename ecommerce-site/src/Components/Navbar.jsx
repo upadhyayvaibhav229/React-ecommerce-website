@@ -6,9 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { img } from "./img";
 import SearchBar from "./SearchBar";
 import { useSearchFilter } from "../Features/SearchFilter";
-import { logout } from "../Features/authSlice";
-import { signOut } from "firebase/auth";
-import { auth } from "../Config/firebaseConfig";
+import { logoutUser } from "../Features/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -18,21 +16,21 @@ const Navbar = () => {
   const { showSearch, setShowSearch } = useSearchFilter();
   const user = useSelector((state) => state.auth.user);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
+  // ✅ Logout with backend + Redux
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      dispatch(logout());
+      await dispatch(logoutUser()).unwrap();
       dispatch(clearCart());
+      setDropdownOpen(false);
       navigate("/login");
     } catch (error) {
-      console.error("Logout Error:", error.message);
+      console.error("Logout Error:", error);
     }
   };
 
-  const handleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const handleMenu = () => setIsOpen(!isOpen);
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -55,7 +53,9 @@ const Navbar = () => {
             <li key={link.name}>
               <Link
                 to={link.path}
-                className={`relative pb-2 ${location.pathname === link.path ? "text-blue-600" : ""}`}
+                className={`relative pb-2 ${
+                  location.pathname === link.path ? "text-blue-600" : ""
+                }`}
               >
                 {link.name}
                 {location.pathname === link.path && (
@@ -75,7 +75,7 @@ const Navbar = () => {
           <Link to="/cart" className="relative">
             <ShoppingCart className="w-5 h-5 cursor-pointer text-gray-700" />
             {totalQuantity > 0 && (
-              <span className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 text-white bg-red-500 rounded-full text-xs">
+              <span className="absolute -top-1 -right-2 flex items-center justify-center w-4 h-4 text-white bg-red-500 rounded-full text-xs">
                 {totalQuantity}
               </span>
             )}
@@ -83,16 +83,43 @@ const Navbar = () => {
 
           {/* Profile / Login */}
           {user ? (
-            <div className="group relative">
-              <img src={img.profile_icon} className="w-6 h-6 cursor-pointer" alt="Profile" />
-              <div className="hidden group-hover:flex flex-col absolute right-0 mt-2 p-2 w-36 bg-slate-100 text-gray-600 shadow-md rounded-md pointer-events-auto">
-                <Link to="/profile" className="block px-4 py-2 hover:text-black">My Profile</Link>
-                <Link to="/order" className="block px-4 py-2 hover:text-black">Orders</Link>
-                <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:text-black">Logout</button>
-              </div>
+            <div className="relative">
+              {/* ✅ Show user avatar if available, otherwise fallback icon */}
+              <img
+                src={user.avatar || img.profile_icon}
+                className="w-8 h-8 rounded-full cursor-pointer border"
+                alt="Profile"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              />
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-slate-100 text-gray-700 shadow-md rounded-md flex flex-col">
+                  <Link
+                    to="/profile"
+                    className="px-4 py-2 hover:bg-gray-200"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    to="/order"
+                    className="px-4 py-2 hover:bg-gray-200"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Orders
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-left px-4 py-2 hover:bg-gray-200"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
-            <Link to="/login" className="text-gray-700 hover:underline">Login</Link>
+            <Link to="/login" className="text-gray-700 hover:underline">
+              Login
+            </Link>
           )}
         </div>
 
@@ -110,7 +137,9 @@ const Navbar = () => {
               <li key={link.name}>
                 <Link
                   to={link.path}
-                  className={`relative pb-2 ${location.pathname === link.path ? "text-blue-600" : ""}`}
+                  className={`relative pb-2 ${
+                    location.pathname === link.path ? "text-blue-600" : ""
+                  }`}
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}

@@ -2,19 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import Input from "../Components/Input";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../Config/firebaseConfig";
-import { getFirestore } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
-import { useDispatch } from "react-redux";
-import { login } from "../Features/authSlice";
-// import { login } from "../store/authSlice";
-// import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { registerUser } from "../Features/authSlice";
 
 function Signup() {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const { loading, error } = useSelector((state) => state.auth);
+
+  const [serverError, setServerError] = useState("");
 
   const {
     register,
@@ -22,54 +19,16 @@ function Signup() {
     formState: { errors },
   } = useForm();
 
-  //   const handleFormSubmit = async (data) => {
-  //     try {
-  //       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
-  //       console.log("Register User Successfully", userCredential.user);
-  //       navigate("/"); // Navigate to dashboard after signup
-
-  //       // Store user data in Firestore
-  //       const db = getFirestore();
-  //       const userDocRef = doc(db, "users", userCredential.user.uid);
-  //       await setDoc(userDocRef, {
-  //         email: data.email,
-  //         name: data.name,
-  //       });
-  //       toast.success("Welcome to Forever");
-  //     } catch (error) {
-  //       setError(error.message);
-  //       console.error(error.message);
-  //     }
-  //   };
-
   const handleFormSubmit = async (data) => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password,
-        data.phone
-      );
-      const user = userCredential.user;
+  try {
+    await dispatch(registerUser(data)).unwrap();
+    toast.success("Account created successfully");
+    navigate("/login"); // ✅ navigate regardless of returned user
+  } catch (err) {
+    setServerError(err || "Registration failed");
+  }
+};
 
-      // Dispatch login action immediately after signup
-      dispatch(login({ uid: user.uid, email: user.email }));
-
-      // Store user data in Firestore
-      const db = getFirestore();
-      const userDocRef = doc(db, "users", user.uid);
-      await setDoc(userDocRef, {
-        email: data.email,
-        name: data.name,
-        phone: data.phone,
-      });
-
-      // Navigate to home page after signup
-      navigate("/login");
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   return (
     <div className="flex items-center justify-center font-serif mt-5">
@@ -86,27 +45,36 @@ function Signup() {
             Sign In
           </button>
         </p>
-        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+
+        {(serverError || error) && (
+          <p className="text-red-600 mt-4 text-center">
+            {serverError || error}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="space-y-5">
+            {/* ✅ Full Name */}
             <Input
               label="Full Name: "
               placeholder="Enter your full name"
-              {...register("name", { required: "Full name is required" })}
+              {...register("fullName", { required: "Full name is required" })}
             />
-            {errors.name && (
-              <p className="text-red-600">{errors.name.message}</p>
-            )}
-            <Input
-              label="Phone Number: "
-              placeholder="Enter your phone number"
-              {...register("phone", { required: "Phone number is required" })}
-            />
-            {errors.phone && (
-              <p className="text-red-600">{errors.phone.message}</p>
+            {errors.fullName && (
+              <p className="text-red-600">{errors.fullName.message}</p>
             )}
 
+            {/* ✅ Username */}
+            <Input
+              label="Username: "
+              placeholder="Choose a username"
+              {...register("username", { required: "Username is required" })}
+            />
+            {errors.username && (
+              <p className="text-red-600">{errors.username.message}</p>
+            )}
+
+            {/* Email */}
             <Input
               label="Email: "
               placeholder="Enter your email"
@@ -123,6 +91,7 @@ function Signup() {
               <p className="text-red-600">{errors.email.message}</p>
             )}
 
+            {/* Password */}
             <Input
               label="Password: "
               type="password"
@@ -135,9 +104,10 @@ function Signup() {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2"
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </div>
         </form>
