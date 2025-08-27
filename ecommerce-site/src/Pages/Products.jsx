@@ -5,7 +5,7 @@ import { selectShop } from "../Features/shopSlice";
 import { addToCart } from "../Features/cartSlice";
 import { img } from "../Components/img";
 import Relatedproducts from "../Components/Relatedproducts";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase authentication
+// import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase authentication
 
 const Products = () => {
   const { id } = useParams();
@@ -18,16 +18,16 @@ const Products = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const auth = getAuth();
+  // const auth = getAuth();
 
   // Check user authentication status
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
   // useEffect(() => {
   //   console.log(cart);

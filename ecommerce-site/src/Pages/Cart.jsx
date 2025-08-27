@@ -16,7 +16,7 @@ const Cart = () => {
 
 
   const checkout = () =>{
-    console.log();
+    // console.log();
     if (cart.cart.length === 0) {
       toast.error("No item is added to checkout")
     }else{
