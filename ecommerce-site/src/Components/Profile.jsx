@@ -1,46 +1,59 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectShop } from "../Features/shopSlice";
-import { img } from "./img"; // Default image
+import { img } from "./img";
+import axios from "axios";
+import { updateUser } from "../Features/authSlice"; // <-- make sure you have an action to update user in Redux
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // Redux state
   const { currency } = useSelector(selectShop);
   const cart = useSelector((state) => state.cart.cart);
-  const user = useSelector((state) => state.auth.user); // <-- get user from Redux auth
+  const user = useSelector((state) => state.auth.user);
 
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState(img.default_img);
   const [showPopup, setShowPopup] = useState(false);
   const [newImage, setNewImage] = useState(null);
 
-  // toggle popup
-  const handlePopup = () => setShowPopup(!showPopup);
+  // editable fields
+  const [editData, setEditData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    location: "",
+  });
 
-  // clear image
+  const handlePopup = () => {
+    if (user) {
+      setEditData({
+        fullName: user.fullName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        location: user.location || "",
+      });
+    }
+    setShowPopup(!showPopup);
+  };
+
   const removeImage = () => {
     setImageUrl(img.default_img);
     setNewImage(null);
   };
 
   useEffect(() => {
-    if (user) {
-      // when user details available
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
+    if (user) setLoading(false);
+    else setLoading(false);
   }, [user]);
 
-  // popup scroll lock
   useEffect(() => {
     document.body.style.overflow = showPopup ? "hidden" : "auto";
   }, [showPopup]);
 
-  // handle image upload
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -51,6 +64,19 @@ const Profile = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  // save changes
+  const handleSave = () => {
+    dispatch(updateUser(editData))
+      .unwrap()
+      .then(() => {
+        setShowPopup(false);
+        toast.success("Profile updated successfully!");
+      })
+      .catch((err) => {
+        console.error("Update failed:", err);
+      });
   };
 
   return (
@@ -65,7 +91,6 @@ const Profile = () => {
           ) : user ? (
             <div>
               <div className="flex flex-row justify-around items-center">
-                {/* Profile Image */}
                 <div className="relative">
                   <img
                     src={imageUrl}
@@ -85,10 +110,17 @@ const Profile = () => {
                   <p className="text-gray-500">{user.username}</p>
                   <p className="text-gray-500">{user.email || "N/A"}</p>
                   <p className="text-gray-500">{user.phone || "N/A"}</p>
-                <button className="bg-blue-500 px-5 py-2 font-bold text-sm rounded cursor-pointer text-white ">Edit</button>
+                  <p className="text-gray-500">{user.location || "N/A"}</p>
+                  <button
+                    onClick={handlePopup}
+                    className="bg-blue-500 px-5 py-2 font-bold text-sm rounded cursor-pointer text-white "
+                  >
+                    Edit
+                  </button>
                 </div>
               </div>
 
+              {/* Cart */}
               <div className="mt-6 text-left">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">
                   Selected Items:
@@ -163,8 +195,46 @@ const Profile = () => {
               />
             )}
 
+            {/* Editable Fields */}
+            <input
+              type="text"
+              value={editData.fullName}
+              onChange={(e) =>
+                setEditData({ ...editData, fullName: e.target.value })
+              }
+              placeholder="Full Name"
+              className="mb-2 block w-full border p-2 rounded-lg"
+            />
+            <input
+              type="email"
+              value={editData.email}
+              onChange={(e) =>
+                setEditData({ ...editData, email: e.target.value })
+              }
+              placeholder="Email"
+              className="mb-2 block w-full border p-2 rounded-lg"
+            />
+            <input
+              type="text"
+              value={editData.phone}
+              onChange={(e) =>
+                setEditData({ ...editData, phone: e.target.value })
+              }
+              placeholder="Phone"
+              className="mb-2 block w-full border p-2 rounded-lg"
+            />
+            <input
+              type="text"
+              value={editData.location}
+              onChange={(e) =>
+                setEditData({ ...editData, location: e.target.value })
+              }
+              placeholder="Location"
+              className="mb-4 block w-full border p-2 rounded-lg"
+            />
+
             <button
-              onClick={handlePopup}
+              onClick={handleSave}
               className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all"
             >
               Save Changes
