@@ -5,33 +5,20 @@ import { selectShop } from "../Features/shopSlice";
 import { addToCart } from "../Features/cartSlice";
 import { img } from "../Components/img";
 import Relatedproducts from "../Components/Relatedproducts";
-// import { getAuth, onAuthStateChanged } from "firebase/auth"; // Firebase authentication
+import { toast } from "react-toastify";
 
 const Products = () => {
   const { id } = useParams();
   const { products, currency } = useSelector(selectShop);
   const cart = useSelector((state) => state.cart.cart);
+  const { status } = useSelector((state) => state.auth); // ✅ logged in status
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState("");
   const [sizes, setSizes] = useState("");
-  const [user, setUser] = useState(null); // Store user authentication status
+  const [showPopup, setShowPopup] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const auth = getAuth();
-
-  // Check user authentication status
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-  //     setUser(currentUser);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log(cart);
-  // }, [cart]);
 
   const fetchProductData = () => {
     const foundProduct = products.find((item) => item._id === id);
@@ -53,11 +40,12 @@ const Products = () => {
   }
 
   const handleAddToCart = () => {
-    if (!user) {
-      alert("Please log in to add items to the cart!");
-      navigate("/login"); 
+    if (!status) {
+      setShowPopup(true); // ✅ show popup if not logged in
       return;
     }
+
+    toast.success("Item Added To cart successfully");
 
     dispatch(
       addToCart({
@@ -72,10 +60,44 @@ const Products = () => {
   };
 
   return (
-    <div className="border-t-2 pt-10 transition-opacity duration-500 opacity-100 p-2 font-serif">
+    <div className="border-t-2 pt-10 p-2 font-serif relative">
+      {/* ✅ POPUP MODAL */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-[300px] text-center">
+            <h2 className="text-lg font-semibold mb-3">Login Required</h2>
+            <p className="text-gray-600 mb-4">
+              Please login or register to add items to cart.
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => navigate("/login")}
+                className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => navigate("/signup")}
+                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600"
+              >
+                Register
+              </button>
+            </div>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="mt-4 text-sm text-gray-500 underline"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* PRODUCT CONTENT */}
       <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
+        {/* Left images */}
         <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
-          <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full space-y-5">
+          <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll sm:w-[18.7%] w-full space-y-5">
             {productData.image.map((item, i) => (
               <img
                 key={i}
@@ -95,16 +117,9 @@ const Products = () => {
           </div>
         </div>
 
-        {/* Product info */}
+        {/* Right product info */}
         <div className="flex-1 space-y-4">
           <h1 className="text-2xl font-medium">{productData.name}</h1>
-          <div className="flex items-center gap-1 mt-2">
-            {[...Array(4)].map((_, i) => (
-              <img key={i} src={img.star_icon} alt="" className="w-3.5" />
-            ))}
-            <img src={img.star_dull_icon} alt="" className="w-3.5" />
-            <p className="pl-2">(122)</p>
-          </div>
           <p className="text-2xl font-semibold mt-5">
             {currency} {productData.price}
           </p>
@@ -137,29 +152,16 @@ const Products = () => {
           ) : (
             <button
               onClick={handleAddToCart}
-              className={`py-2 px-4 ${
-                user
-                  ? "bg-black text-white active:bg-gray-500"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-              disabled={!user}
+              className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-700"
             >
               ADD TO CART
             </button>
           )}
-
-          <hr className="mt-8 sm:w-4/5 w-full bg-gray-700" />
-          <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
-            <p>100% Original product.</p>
-            <p>Free Delivery within 3-5 days.</p>
-            <p>Easy 15 days returns and exchanges.</p>
-          </div>
         </div>
       </div>
 
-      <hr className="mt-5" />
-
       {/* Related Products */}
+      <hr className="mt-5" />
       <Relatedproducts
         category={productData.category}
         subCategory={productData.subCategory}
