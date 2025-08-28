@@ -36,12 +36,10 @@ const Cart = () => {
   }
   return (
     <>
-
       <div className="border-l mt-14 sm:ml-5 sm:p-4 p-1">
         <div className="text-3xl mb-4">
           <Title text1={"Your"} text2={"Cart"} />
         </div>
-
         <div className="flex flex-col gap-4 text-xl">
           {cart.cart?.length > 0 ? (
             cart.cart.map((item, index) => (

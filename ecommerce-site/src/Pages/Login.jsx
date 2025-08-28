@@ -29,12 +29,14 @@ function Login() {
           password: data.password
         })
       ).unwrap();
-      console.log(result);
+      // console.log(result);
 
-      if (result) {
-        toast.success("User logged in successfully");
-        navigate("/");
-      }
+       if (result) {
+         toast.success("User logged in successfully");
+         navigate("/");
+       } else {
+         toast.error("Invalid credentials");
+       }
     } catch (error) {
       setServerError(error || "Login failed");
     }

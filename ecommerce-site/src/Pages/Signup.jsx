@@ -22,6 +22,9 @@ function Signup() {
   const handleFormSubmit = async (data) => {
   try {
     await dispatch(registerUser(data)).unwrap();
+    if(data.email !== data.email || data.username !== data.username){
+      toast.error("Email or Username is already in use");
+    }
     toast.success("Account created successfully");
     navigate("/login"); // ✅ navigate regardless of returned user
   } catch (err) {
