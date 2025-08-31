@@ -43,7 +43,7 @@ const Products = () => {
     if (!status) {
       setShowPopup(true); // ✅ show popup if not logged in
       return;
-    }
+    }    
 
     toast.success("Item Added To cart successfully");
 
