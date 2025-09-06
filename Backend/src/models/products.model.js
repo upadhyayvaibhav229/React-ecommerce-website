@@ -41,10 +41,10 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    images: {
-        type: [String],
+    images: [{
+        type: String,
         required: true
-    },
+    }],
     stock: {
         type: Number,
         required: true,
@@ -61,7 +61,7 @@ const productSchema = new mongoose.Schema({
 
 productSchema.pre("save", function (next) {
     if (this.isModified("name")) {
-        this.slug = slugify(this.name, { lower: true , strict: true});
+        this.slug = slugify(this.name, { lower: true, strict: true });
     }
     next();
 })

@@ -28,7 +28,7 @@ const uploadOnCloudinary = async (localFilePath) => {
   } catch (error) {
     console.error("Cloudinary Upload Error:", error);
 
-    // Remove the temporary file only if it exists
+    // Remove the temporary file onlay if it exists
     if (fs.existsSync(localFilePath)) {
       fs.unlinkSync(localFilePath);
     }
