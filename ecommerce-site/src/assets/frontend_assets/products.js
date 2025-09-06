@@ -11,7 +11,7 @@ export const products = [
         category: "Women",
         subCategory: "Topwear",
         sizes: ["S", "M", "L", "XL", "XXL"],
-        date: 1716634345448,
+        date: 1716634345448, 
         bestseller: true
     },
     {
